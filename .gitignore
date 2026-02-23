@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Streamlit
+.streamlit/
+
+# Excel/CSV files generated locally
+*.xlsx
+*.csv
+
+# OS
+.DS_Store
+Thumbs.db
