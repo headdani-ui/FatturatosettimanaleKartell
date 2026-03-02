@@ -165,7 +165,8 @@ def get_metadata(df):
             "KARTELL_NUOVO": "Kerry",
             "KARTELL_FORNITORE_KART00": "00",
             "KARTELL_FORNITORE_KARTUS": "US",
-            "KARTELL_FORNITORE_KARTAE": "Dubai"
+            "KARTELL_FORNITORE_KARTAE": "Dubai",
+            "KARTELL_FORNITORE_KSPPAR": "Ricambi"
         }
         metadata["magazzino"] = mag_map.get(mag_val, mag_val)
         metadata["group_id"] = mag_val
@@ -279,7 +280,8 @@ def generate_excel(processed_data):
             "Kerry": 0.22,
             "00": 0.185,
             "Dubai": 0.15,
-            "US": 0.16
+            "US": 0.16,
+            "Ricambi": 0.16
         }
         fee_val = fee_pcts.get(mag, 0.22)
         
@@ -319,8 +321,8 @@ def generate_excel(processed_data):
         else:
             worksheet.write(1, summary_start_col + 2, "N/A", text_format)
 
-        # 4. Totale Fatturato in Valuta (Solo se NON Kerry o 00)
-        if mag not in ["Kerry", "00"]:
+        # 4. Totale Fatturato in Valuta (Solo se NON Kerry, 00 o Ricambi)
+        if mag not in ["Kerry", "00", "Ricambi"]:
             worksheet.write_formula(1, summary_start_col + 3, f"=SUM({col_valuta}:{col_valuta})", curr_format)
             # 5. Ns Fee in Valuta
             worksheet.write_formula(1, summary_start_col + 4, f"={c_tot_val}2*{fee_val}", curr_format)
@@ -390,7 +392,7 @@ else:
             <code>Conteggi vendite [Settimana] [Magazzino] [N-c]</code>
             <ul style="text-align: left; margin-top: 10px;">
                 <li><b>W:</b> Ricavato dalla colonna Data_Fattura</li>
-                <li><b>Magazzino:</b> Tradotto da KARTELL_ (Kerry, 00, US, Dubai)</li>
+                <li><b>Magazzino:</b> Tradotto da KARTELL_ (Kerry, 00, US, Dubai, Ricambi)</li>
                 <li><b>Storno (N-c):</b> Aggiunto automaticamente per Causali di storno</li>
             </ul>
         </div>
