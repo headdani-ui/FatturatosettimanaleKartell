@@ -364,25 +364,40 @@ if uploaded_file:
 
         st.markdown("---")
         
-        # Determiniamo il nome del file finale
+        # Determiniamo i nomi dei file
         storno_suffix = " N-c" if meta["is_storno"] else ""
-        final_filename = f"Conteggi vendite {meta['week']} {meta['magazzino']}{storno_suffix}.xlsx"
+        base_name = f"Conteggi vendite {meta['week']} {meta['magazzino']}{storno_suffix}"
+        excel_filename = f"{base_name}.xlsx"
+        csv_filename = f"{base_name}.csv"
+        zip_filename = f"{base_name}.zip"
         
-        st.info(f"📁 Il file verrà scaricato come: **{final_filename}**")
+        st.info(f"📁 Puoi scaricare i file con i nomi suggeriti:")
         
-        if st.button("🚀 GENERA E SCARICA EXCEL"):
-            with st.spinner("Generazione in corso..."):
-                # Prepariamo i dati (singolo file in lista per compatibilità con funzione)
-                gen_data = [{"df": df, "original_name": uploaded_file.name, "metadata": meta}]
-                excel_binary = generate_excel(gen_data)
-                
-                st.success("✅ Elaborazione completata!")
-                st.download_button(
-                    label="📥 Clicca qui per scaricare",
-                    data=excel_binary,
-                    file_name=final_filename,
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
+        # 1. Prepariamo l'Excel (sempre necessario per mostrare i pulsanti)
+        gen_data = [{"df": df, "original_name": uploaded_file.name, "metadata": meta}]
+        excel_binary = generate_excel(gen_data)
+        
+        col_dl1, col_dl2 = st.columns(2)
+        
+        with col_dl1:
+            st.download_button(
+                label="📥 Scarica Excel Rielaborato",
+                data=excel_binary,
+                file_name=excel_filename,
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+            st.caption(f"File: {excel_filename}")
+
+        with col_dl2:
+            st.download_button(
+                label="📥 Scarica CSV Rinominato",
+                data=uploaded_file.getvalue(),
+                file_name=csv_filename,
+                mime="text/csv",
+                use_container_width=True
+            )
+            st.caption(f"File: {csv_filename}")
 
 else:
     st.markdown("""
